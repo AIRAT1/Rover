@@ -4,16 +4,19 @@ package de.android.ayrathairullin.rover.player;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Array;
 import com.boontaran.games.ActorClip;
 import com.boontaran.marchingSquare.MarchingSquare;
 
@@ -154,5 +157,123 @@ public class Player extends ActorClip implements IBody{
         ArrayList<float[]> traces = ms.traceMap();
         float[] polyVertices = traces.get(0);
         return polyVertices;
+    }
+
+    private Body createBodyFromTriangles(World world, Array<Polygon> triangles) {
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+        def.linearDamping = 0;
+        Body body = world.createBody(def);
+        for (Polygon triangle : triangles) {
+            FixtureDef fDef = new FixtureDef();
+            PolygonShape shape = new PolygonShape();
+            shape.set(triangle.getTransformedVertices());
+            fDef.shape = shape;
+            fDef.restitution = .3f;
+            fDef.density = 1;
+            body.createFixture(fDef);
+            shape.dispose();
+        }
+        return body;
+    }
+
+    public void onKey(boolean moveFrontKey, boolean moveBackKey) {
+        float torque = Setting.WEEL_TORQUE;
+        float maxAV = 18;
+        if (moveFrontKey) {
+            if (- rearWheel.getAngularVelocity() < maxAV) {
+                rearWheel.applyTorque(-torque, true);
+            }
+            if (- frontWheel.getAngularVelocity() < maxAV) {
+                frontWheel.applyTorque(-torque, true);
+            }
+        }
+        if (moveBackKey) {
+            if (rearWheel.getAngularVelocity() < maxAV) {
+                rearWheel.applyTorque(torque, true);
+            }
+            if (frontWheel.getAngularVelocity() < maxAV) {
+                frontWheel.applyTorque(torque, true);
+            }
+        }
+    }
+
+    public void jumpBack(float value) {
+        if (value < .2f) {
+            value = .2f;
+        }
+        rover.applyLinearImpulse(0, jumpImpulse * value,
+                rover.getWorldCenter().x + 5 / Level.WORLD_SCALE,
+                rover.getWorldCenter().y, true);
+        isTouchGround = false;
+        jumpWait = .3f;
+    }
+
+    public void jumpForward(float value) {
+        if (value < .2f) {
+            value = .2f;
+        }
+        rover.applyLinearImpulse(0, jumpImpulse * value,
+                rover.getWorldCenter().x - 4 / Level.WORLD_SCALE,
+                rover.getWorldCenter().y, true);
+        isTouchGround = false;
+        jumpWait = .3f;
+    }
+
+    @Override
+    public void act(float delta) {
+        if (jumpWait > 0) {
+            jumpWait -= delta;
+        }
+        if (destroyOnNextUpdate) {
+            destroyOnNextUpdate = false;
+            world.destroyJoint(frontWheelJoint);
+            world.destroyJoint(rearWheelJoint);
+            world.destroyJoint(astroJoint);
+            world.destroyBody(astronaut);
+            astronautImg.remove();
+            astronautFall();
+        }
+        super.act(delta);
+    }
+
+    private void astronautFall() {
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+        def.linearDamping = 0;
+        def.angularDamping = 0;
+        def.position.x = astronaut.getPosition().x;
+        def.position.y = astronaut.getPosition().y;
+        def.angle = getRotation() * 3.1416f / 180;
+        def.angularVelocity = astronaut.getAngularVelocity();
+        Body body = world.createBody(def);
+        FixtureDef fDef = new FixtureDef();
+        CircleShape shape = new CircleShape();
+        shape.setRadius(10 / Level.WORLD_SCALE);
+        fDef.shape = shape;
+        fDef.restitution = .5f;
+        fDef.friction = .4f;
+        fDef.density = 1;
+        fDef.isSensor = true;
+        body.createFixture(fDef);
+        body.setLinearVelocity(astronaut.getLinearVelocity());
+        shape.dispose();
+        level.addChild(astronautFallCont);
+        astronautFallCont.setPosition(getX(), getY());
+        UserData data = new UserData();
+        data.actor = astronautFallCont;
+        body.setUserData(data);
+    }
+
+    public void destroy() {
+        if (hasDestroyed) {
+            return;
+        }
+        hasDestroyed = true;
+        destroyOnNextUpdate = true;
+    }
+
+    public boolean isHasDestroyed() {
+        return hasDestroyed;
     }
 }
