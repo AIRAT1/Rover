@@ -1,6 +1,9 @@
 package de.android.ayrathairullin.rover.player;
 
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -12,6 +15,9 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.boontaran.games.ActorClip;
+import com.boontaran.marchingSquare.MarchingSquare;
+
+import java.util.ArrayList;
 
 import de.android.ayrathairullin.rover.Rover;
 import de.android.ayrathairullin.rover.Setting;
@@ -113,5 +119,40 @@ public class Player extends ActorClip implements IBody{
         shape.dispose();
 
         return body;
+    }
+
+    private float[] traceOutline(String regionName) {
+        Texture bodyOutLine = Rover.atlas.findRegion(regionName).getTexture();
+        TextureAtlas.AtlasRegion reg = Rover.atlas.findRegion(regionName);
+        int w = reg.getRegionWidth();
+        int h = reg.getRegionHeight();
+        int x = reg.getRegionX();
+        int y = reg.getRegionY();
+        bodyOutLine.getTextureData().prepare();
+        Pixmap allPixmap = bodyOutLine.getTextureData().consumePixmap();
+        Pixmap pixmap = new Pixmap(x, y, Pixmap.Format.RGBA8888);
+        pixmap.drawPixmap(allPixmap, 0, 0, x, y, w, h);
+        allPixmap.dispose();
+        int pixel;
+        w = pixmap.getWidth();
+        h = pixmap.getHeight();
+        int[][] map;
+        map = new int[w][h];
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                pixel = pixmap.getPixel(i, j);
+                if ((pixel & 0x000000ff) == 0) {
+                    map[i][j] = 0;
+                }else {
+                    map[i][j] = 1;
+                }
+            }
+        }
+        pixmap.dispose();
+        MarchingSquare ms = new MarchingSquare(map);
+        ms.invertY();
+        ArrayList<float[]> traces = ms.traceMap();
+        float[] polyVertices = traces.get(0);
+        return polyVertices;
     }
 }
