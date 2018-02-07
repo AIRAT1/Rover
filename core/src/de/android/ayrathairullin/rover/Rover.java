@@ -12,7 +12,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.boontaran.games.StageGame;
+
+import java.util.Locale;
 
 public class Rover extends Game {
 	public static final int SHOW_BANNER = 1;
@@ -27,6 +30,8 @@ public class Rover extends Game {
 	public static TextureAtlas atlas;
 	public static BitmapFont font40;
 	private GameCallback gameCallback;
+	private I18NBundle bundle;
+	private String path_to_atlas;
 
 	public Rover(GameCallback gameCallback) {
 		this.gameCallback = gameCallback;
@@ -36,9 +41,14 @@ public class Rover extends Game {
 	public void create () {
 		StageGame.setAppSize(800, 480);
 		Gdx.input.setCatchBackKey(true);
+
+		Locale locale = Locale.getDefault();
+		bundle = I18NBundle.createBundle(Gdx.files.internal("MyBundle"), locale);
+		path_to_atlas = bundle.get("path");
+
 		loadingAssets = true;
 		assetManager = new AssetManager();
-		assetManager.load("images_ru/pack.atlas", TextureAtlas.class);
+		assetManager.load(path_to_atlas, TextureAtlas.class);
 		assetManager.load("musics/music1.ogg", Music.class);
 		assetManager.load("musics/level_failed.ogg", Music.class);
 		assetManager.load("musics/level_win.ogg", Music.class);
@@ -73,7 +83,7 @@ public class Rover extends Game {
 	}
 
 	private void onAssetsLoaded() {
-		atlas = assetManager.get("images_ru/pack.atlas", TextureAtlas.class);
+		atlas = assetManager.get(path_to_atlas, TextureAtlas.class);
 		font40 = assetManager.get("font40.ttf", BitmapFont.class);
 	}
 
