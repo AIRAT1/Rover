@@ -17,8 +17,10 @@ import com.boontaran.games.StageGame;
 
 import java.util.Locale;
 
+import de.android.ayrathairullin.rover.levels.LevelList;
 import de.android.ayrathairullin.rover.media.Media;
 import de.android.ayrathairullin.rover.screens.Intro;
+import de.android.ayrathairullin.rover.utils.Data;
 
 public class Rover extends Game {
 	public static final int SHOW_BANNER = 1;
@@ -37,6 +39,8 @@ public class Rover extends Game {
 	private String path_to_atlas;
 	public static Media media;
 	private Intro intro;
+	public static Data data;
+	private LevelList levelList;
 
 	public Rover(GameCallback gameCallback) {
 		this.gameCallback = gameCallback;
@@ -69,6 +73,7 @@ public class Rover extends Game {
 		sizeParams.fontParameters.size = 40;
 		assetManager.load("font40.ttf", BitmapFont.class, sizeParams);
 		media = new Media(assetManager);
+		data = new Data();
 	}
 
 	@Override
@@ -105,16 +110,46 @@ public class Rover extends Game {
 			@Override
 			public void call(int code) {
 				if (code == Intro.ON_PLAY) {
-					// TODO showLevelList();
+					showLevelList();
 					 hideIntro();
 				}else if (code == Intro.ON_BACK) {
 					exitApp();
 				}
 			}
 		});
+		media.playMusic("music1.ogg", true);
 	}
 
 	private void hideIntro() {
 		intro = null;
+	}
+
+	private void showLevelList() {
+		levelList = new LevelList();
+		setScreen(levelList);
+		levelList.setCallback(new StageGame.Callback() {
+			@Override
+			public void call(int code) {
+				if (code == LevelList.ON_BACK) {
+					showIntro();
+					hideLevelList();
+				} else if (code == LevelList.ON_LEVEL_SELECTED) {
+					// TODO showLevel();
+					hideLevelList();
+				} else if(code == LevelList.ON_OPEN_MARKET) {
+					gameCallback.sendMessage(OPEN_MARKET);
+				} else if (code == LevelList.ON_SHARE) {
+					gameCallback.sendMessage(SHARE);
+				}
+
+			}
+		});
+		gameCallback.sendMessage(SHOW_BANNER);
+		media.playMusic("music1.ogg", true);
+	}
+
+	private void hideLevelList() {
+		levelList = null;
+		gameCallback.sendMessage(HIDE_BANNER);
 	}
 }
