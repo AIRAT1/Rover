@@ -17,6 +17,9 @@ import com.boontaran.games.StageGame;
 
 import java.util.Locale;
 
+import de.android.ayrathairullin.rover.media.Media;
+import de.android.ayrathairullin.rover.screens.Intro;
+
 public class Rover extends Game {
 	public static final int SHOW_BANNER = 1;
 	public static final int HIDE_BANNER = 2;
@@ -32,6 +35,8 @@ public class Rover extends Game {
 	private GameCallback gameCallback;
 	private I18NBundle bundle;
 	private String path_to_atlas;
+	public static Media media;
+	private Intro intro;
 
 	public Rover(GameCallback gameCallback) {
 		this.gameCallback = gameCallback;
@@ -63,6 +68,7 @@ public class Rover extends Game {
 		sizeParams.fontFileName = "fonts/GROBOLD.ttf";
 		sizeParams.fontParameters.size = 40;
 		assetManager.load("font40.ttf", BitmapFont.class, sizeParams);
+		media = new Media(assetManager);
 	}
 
 	@Override
@@ -85,9 +91,30 @@ public class Rover extends Game {
 	private void onAssetsLoaded() {
 		atlas = assetManager.get(path_to_atlas, TextureAtlas.class);
 		font40 = assetManager.get("font40.ttf", BitmapFont.class);
+		showIntro();
 	}
 
 	private void exitApp() {
 		Gdx.app.exit();
+	}
+
+	private void showIntro() {
+		intro = new Intro();
+		setScreen(intro);
+		intro.setCallback(new StageGame.Callback() {
+			@Override
+			public void call(int code) {
+				if (code == Intro.ON_PLAY) {
+					// TODO showLevelList();
+					 hideIntro();
+				}else if (code == Intro.ON_BACK) {
+					exitApp();
+				}
+			}
+		});
+	}
+
+	private void hideIntro() {
+		intro = null;
 	}
 }
