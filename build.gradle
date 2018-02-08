@@ -1,6 +1,4 @@
 buildscript {
-    
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -8,10 +6,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.badlogicgames.gdx:gdx-tools:1.9.5'
-        
-
     }
 }
 
@@ -22,8 +18,8 @@ allprojects {
     version = '1.0'
     ext {
         appName = "Rover"
-        gdxVersion = '1.9.7'
-        roboVMVersion = '2.3.1'
+        gdxVersion = '1.9.5'
+        roboVMVersion = '2.3.0'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
@@ -48,7 +44,6 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        
     }
 }
 
@@ -91,7 +86,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile files("libs/game_lib.jar")
+        compile files("libs/game_lib.jar");
     }
 }
 
