@@ -6,7 +6,7 @@ filter: MipMapLinearNearest,Linear
 repeat: none
 astronaut
   rotate: false
-  xy: 1730, 632
+  xy: 992, 296
   size: 61, 80
   orig: 61, 80
   offset: 0, 0
@@ -20,7 +20,7 @@ astronaut_fall
   index: -1
 astronaut_model
   rotate: false
-  xy: 966, 39
+  xy: 1974, 614
   size: 53, 70
   orig: 53, 70
   offset: 0, 0
@@ -41,14 +41,14 @@ done_btn_down
   index: -1
 front_wheel
   rotate: false
-  xy: 1987, 884
+  xy: 1255, 482
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 rear_wheel
   rotate: false
-  xy: 1987, 884
+  xy: 1255, 482
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
@@ -76,63 +76,63 @@ intro_bg
   index: -1
 joystick
   rotate: false
-  xy: 1343, 624
+  xy: 1306, 624
   size: 186, 100
   orig: 186, 100
   offset: 0, 0
   index: -1
 joystick_left
   rotate: false
-  xy: 804, 309
+  xy: 804, 276
   size: 186, 100
   orig: 186, 100
   offset: 0, 0
   index: -1
 joystick_right
   rotate: false
-  xy: 1641, 770
+  xy: 1067, 422
   size: 186, 100
   orig: 186, 100
   offset: 0, 0
   index: -1
 jump1
   rotate: false
-  xy: 1531, 624
+  xy: 1788, 624
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 jump1_down
   rotate: false
-  xy: 1124, 309
+  xy: 1306, 522
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 jump2
   rotate: false
-  xy: 1829, 770
+  xy: 804, 53
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 jump2_down
   rotate: false
-  xy: 1226, 309
+  xy: 1917, 770
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 jump_gauge_off
   rotate: false
-  xy: 1622, 615
+  xy: 966, 267
   size: 8, 7
   orig: 8, 7
   offset: 0, 0
   index: -1
 jump_gauge_on
   rotate: false
-  xy: 966, 300
+  xy: 1987, 917
   size: 8, 7
   orig: 8, 7
   offset: 0, 0
@@ -153,35 +153,35 @@ level_completed
   index: -1
 level_icon_bg
   rotate: false
-  xy: 966, 195
+  xy: 1408, 540
   size: 82, 82
   orig: 82, 82
   offset: 0, 0
   index: -1
 level_icon_bg_down
   rotate: false
-  xy: 1633, 617
+  xy: 906, 58
   size: 95, 95
   orig: 95, 95
   offset: 0, 0
   index: -1
 level_icon_hilite
   rotate: false
-  xy: 992, 279
+  xy: 1656, 594
   size: 130, 130
   orig: 130, 130
   offset: 0, 0
   index: -1
 level_icon_lock
   rotate: false
-  xy: 1304, 537
+  xy: 729, 11
   size: 30, 41
   orig: 30, 41
   offset: 0, 0
   index: -1
 paused
   rotate: false
-  xy: 1378, 726
+  xy: 804, 378
   size: 261, 144
   orig: 261, 144
   offset: 0, 0
@@ -195,42 +195,42 @@ play_btn
   index: -1
 play_btn_down
   rotate: false
-  xy: 1343, 572
+  xy: 1067, 370
   size: 143, 50
   orig: 143, 50
   offset: 0, 0
   index: -1
 please_wait
   rotate: false
-  xy: 804, 580
+  xy: 1378, 726
   size: 537, 144
   orig: 537, 144
   offset: 0, 0
   index: -1
 quit_btn
   rotate: false
-  xy: 1488, 568
+  xy: 1492, 549
   size: 132, 54
   orig: 132, 54
   offset: 0, 0
   index: -1
 quit_btn_down
   rotate: false
-  xy: 1641, 714
+  xy: 1626, 538
   size: 132, 54
   orig: 132, 54
   offset: 0, 0
   index: -1
 rate
   rotate: false
-  xy: 966, 111
+  xy: 1055, 286
   size: 82, 82
   orig: 82, 82
   offset: 0, 0
   index: -1
 rate_down
   rotate: false
-  xy: 1050, 195
+  xy: 1139, 286
   size: 82, 82
   orig: 82, 82
   offset: 0, 0
@@ -251,36 +251,36 @@ retry_btn_down
   index: -1
 rover
   rotate: false
-  xy: 804, 188
+  xy: 804, 155
   size: 160, 119
   orig: 160, 119
   offset: 0, 0
   index: -1
 rover_model
   rotate: false
-  xy: 804, 67
+  xy: 1494, 605
   size: 160, 119
   orig: 160, 119
   offset: 0, 0
   index: -1
 share
   rotate: false
-  xy: 1050, 111
+  xy: 1917, 686
   size: 82, 82
   orig: 82, 82
   offset: 0, 0
   index: -1
 share_down
   rotate: false
-  xy: 1931, 788
+  xy: 1890, 602
   size: 82, 82
   orig: 82, 82
   offset: 0, 0
   index: -1
 title
   rotate: false
-  xy: 804, 411
-  size: 498, 167
-  orig: 498, 167
+  xy: 804, 524
+  size: 500, 200
+  orig: 500, 200
   offset: 0, 0
   index: -1
