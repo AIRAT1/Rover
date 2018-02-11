@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="200" height="25" tilewidth="32" tileheight="32" infinite="0" nextobjectid="22">
- <imagelayer name="Слой изображений 1">
+ <imagelayer name="layer1">
   <image source="image1.png" width="800" height="800"/>
  </imagelayer>
- <imagelayer name="Слой изображений 2" x="800" offsetx="800" offsety="0">
+ <imagelayer name="layer2" x="800" offsetx="800" offsety="0">
   <image source="image2.png" width="800" height="800"/>
  </imagelayer>
- <imagelayer name="Слой изображений 3" x="1600" offsetx="1600" offsety="0">
+ <imagelayer name="layer3" x="1600" offsetx="1600" offsety="0">
   <image source="image3.png" width="800" height="800"/>
  </imagelayer>
- <imagelayer name="Слой изображений 4" x="2400" offsetx="2400" offsety="0">
+ <imagelayer name="layer4" x="2400" offsetx="2400" offsety="0">
   <image source="image4.png" width="800" height="800"/>
  </imagelayer>
- <imagelayer name="Слой изображений 5" x="3200" offsetx="3200" offsety="0">
+ <imagelayer name="layer5" x="3200" offsetx="3200" offsety="0">
   <image source="image5.png" width="800" height="800"/>
  </imagelayer>
- <imagelayer name="Слой изображений 6" x="4000" offsetx="4000" offsety="0">
+ <imagelayer name="layer6" x="4000" offsetx="4000" offsety="0">
   <image source="image6.png" width="800" height="800"/>
  </imagelayer>
- <imagelayer name="Слой изображений 7" x="4800" offsetx="4800" offsety="0">
+ <imagelayer name="layer7" x="4800" offsetx="4800" offsety="0">
   <image source="image7.png" width="800" height="800"/>
  </imagelayer>
- <imagelayer name="Слой изображений 8" x="5600" offsetx="5600" offsety="0">
+ <imagelayer name="layer8" x="5600" offsetx="5600" offsety="0">
   <image source="image8.png" width="800" height="800"/>
  </imagelayer>
  <objectgroup name="items">
