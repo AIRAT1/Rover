@@ -2,15 +2,19 @@ package de.android.ayrathairullin.rover.levels;
 
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.boontaran.games.StageGame;
 
 import de.android.ayrathairullin.rover.Rover;
+import de.android.ayrathairullin.rover.Setting;
 import de.android.ayrathairullin.rover.controls.CButton;
 import de.android.ayrathairullin.rover.controls.Joystick;
 import de.android.ayrathairullin.rover.player.Player;
@@ -59,11 +63,66 @@ public class Level extends StageGame{
     protected void onDelayCall(String code) {
         if (code.equals("build_level")) {
             build();
+        }else if (code.equals("resumeLevel2")) {
+            resumeLevel2();
         }
     }
 
-    private void build() {
+    private void setBackground(String region) {
+        clearBackground();
+        Image bg = new Image(Rover.atlas.findRegion(region));
+        addBackground(bg, true, false);
+    }
 
+    private void resumeLevel2() {
+
+    }
+
+    private void build() {
+        hasBeenBuilt = true;
+        world = new World(new Vector2(0, -Setting.GRAVITY), true);
+        world.setContactListener(contactListener);
+        debugRenderer = new Box2DDebugRenderer();
+        // TODO loadMap();
+        if (player == null) {
+            throw new Error("player not defined");
+        }
+        if (finish == null) {
+            throw new Error("finish not defined");
+        }
+        // TODO addRectangleLand();
+        int count = 60;
+        while (count-- > 0) {
+            world.step(1f / 60, 10, 10);
+            joystick = new Joystick(mmToPx(10));
+            addOverlayChild(joystick);
+            joystick.setPosition(15, 15);
+            jumpBackBtn = new CButton(
+                    new Image(Rover.atlas.findRegion("jump1")),
+                    new Image(Rover.atlas.findRegion("jump1_down")),
+                    mmToPx(10)
+            );
+            addOverlayChild(jumpBackBtn);
+            jumpForwardBtn = new CButton(
+                    new Image(Rover.atlas.findRegion("jump2")),
+                    new Image(Rover.atlas.findRegion("jump2_down")),
+                    mmToPx(10)
+            );
+            addOverlayChild(jumpForwardBtn);
+            jumpForwardBtn.setPosition(getWidth() - jumpForwardBtn.getWidth() - 15, 15);
+            jumpBackBtn.setPosition(jumpForwardBtn.getX() - jumpBackBtn.getWidth() - 15, 15);
+            jumpBackBtn.addListener(new ClickListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    if (state == PLAY) {
+                        if (player.isTouchedGround()) {
+                            return true;
+                        }
+                    }
+                    return super.touchDown(event, x, y, pointer, button);
+                }
+            });
+        }
     }
 
     public void addChild(Actor actor) {
