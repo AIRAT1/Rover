@@ -17,7 +17,7 @@ import com.boontaran.games.StageGame;
 
 import java.util.Locale;
 
-import de.android.ayrathairullin.rover.levels.LevelList;
+import de.android.ayrathairullin.rover.screens.LevelList;
 import de.android.ayrathairullin.rover.media.Media;
 import de.android.ayrathairullin.rover.screens.Intro;
 import de.android.ayrathairullin.rover.utils.Data;

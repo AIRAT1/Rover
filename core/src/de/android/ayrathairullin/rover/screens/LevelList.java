@@ -1,4 +1,4 @@
-package de.android.ayrathairullin.rover.levels;
+package de.android.ayrathairullin.rover.screens;
 
 
 import com.badlogic.gdx.Input.Keys;
