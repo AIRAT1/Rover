@@ -1,14 +1,27 @@
 package de.android.ayrathairullin.rover.levels;
 
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,12 +29,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.boontaran.games.StageGame;
+import com.boontaran.games.tiled.TileLayer;
 
 import de.android.ayrathairullin.rover.Rover;
 import de.android.ayrathairullin.rover.Setting;
 import de.android.ayrathairullin.rover.controls.CButton;
 import de.android.ayrathairullin.rover.controls.Joystick;
 import de.android.ayrathairullin.rover.controls.JumpGauge;
+import de.android.ayrathairullin.rover.player.IBody;
 import de.android.ayrathairullin.rover.player.Player;
 import de.android.ayrathairullin.rover.player.UserData;
 
@@ -190,7 +205,66 @@ public class Level extends StageGame {
             Body bodyA = contact.getFixtureA().getBody();
             Body bodyB = contact.getFixtureB().getBody();
             if (bodyA == player.astronaut) {
+                playerTouch(bodyB);
+                return;
+            }
+            if (bodyB == player.astronaut) {
                 playerTouch(bodyA);
+                return;
+            }
+            if (bodyA == player.rover) {
+                UserData data = (UserData)bodyB.getUserData();
+                if (data != null) {
+                    if (data.name.equals("land")) {
+                        player.touchGround();
+                        return;
+                    }
+                }
+            }
+            if (bodyB == player.rover) {
+                UserData data = (UserData)bodyA.getUserData();
+                if (data != null) {
+                    if (data.name.equals("land")) {
+                        player.touchGround();
+                        return;
+                    }
+                }
+            }
+            if (bodyA == player.frontWheel) {
+                UserData data = (UserData)bodyB.getUserData();
+                if (data != null) {
+                    if (data.name.equals("land")) {
+                        player.touchGround();
+                        return;
+                    }
+                }
+            }
+            if (bodyB == player.frontWheel) {
+                UserData data = (UserData)bodyA.getUserData();
+                if (data != null) {
+                    if (data.name.equals("land")) {
+                        player.touchGround();
+                        return;
+                    }
+                }
+            }
+            if (bodyA == player.rearWheel) {
+                UserData data = (UserData)bodyB.getUserData();
+                if (data != null) {
+                    if (data.name.equals("land")) {
+                        player.touchGround();
+                        return;
+                    }
+                }
+            }
+            if (bodyB == player.rearWheel) {
+                UserData data = (UserData)bodyA.getUserData();
+                if (data != null) {
+                    if (data.name.equals("land")) {
+                        player.touchGround();
+                        return;
+                    }
+                }
             }
         }
 
@@ -209,6 +283,151 @@ public class Level extends StageGame {
 
         }
     };
+
+    private void loadMap(String tmxFile) {
+        TmxMapLoader.Parameters params = new TmxMapLoader.Parameters();
+        params.generateMipMaps = true;
+        params.textureMinFilter = Texture.TextureFilter.MipMapLinearNearest;
+        params.textureMagFilter = Texture.TextureFilter.Linear;
+        map = new TmxMapLoader().load(tmxFile, params);
+        MapProperties prop = new MapProperties();
+        mapWidth = prop.get("width", Integer.class);
+        mapHeight = prop.get("height", Integer.class);
+        tilePixelWidth = prop.get("tileWidth", Integer.class);
+        tilePixelHeight = prop.get("tileHeight", Integer.class);
+        levelWidth = mapWidth * tilePixelWidth;
+        levelHeight = mapHeight * tilePixelHeight;
+        for (MapLayer layer : map.getLayers()) {
+            String name = layer.getName();
+            if (name.equals("land")) {
+                createLands(layer.getObjects());
+            }else if (name.equals("items")) {
+                createItems(layer.getObjects());
+            }else {
+                TileLayer tLayer = new TileLayer(camera, map, name, stage.getBatch());
+                addChild(tLayer);
+            }
+        }
+    }
+
+    private void createItems(MapObjects objects) {
+        Rectangle rect;
+        for (MapObject object : objects) {
+            rect = ((RectangleMapObject)object).getRectangle();
+            if (object.getName().equals("player")) {
+                player = new Player(this);
+                player.setPosition(rect.x, rect.y);
+                addChild(player);
+                addBody(player);
+                stage.addActor(player);
+            }else if (object.getName().equals("finish")) {
+                finish = addFinish(rect);
+            }
+        }
+    }
+
+    private Body addFinish(Rectangle rectangle) {
+        rectangle.x /= WORLD_SCALE;
+        rectangle.y /= WORLD_SCALE;
+        rectangle.width /= WORLD_SCALE;
+        rectangle.height /= WORLD_SCALE;
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.StaticBody;
+        def.linearDamping = 0;
+        FixtureDef fdef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(rectangle.width / 2, rectangle.height / 2);
+        fdef.shape = shape;
+        fdef.restitution = LAND_RESTITUTION;
+        fdef.density = 1;
+        fdef.isSensor = true;
+        Body body = world.createBody(def);
+        body.createFixture(fdef);
+        body.setTransform(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2, 0);
+        shape.dispose();
+        return body;
+    }
+
+    private void playMusic() {
+        if (musicName != null && musicHasLoaded) {
+            Rover.media.playMusic(musicName, true);
+        }
+    }
+
+    private void stopMusic() {
+        if (musicName != null && musicHasLoaded) {
+            Rover.media.stopMusic(musicName);
+        }
+    }
+
+    private void hideButtons() {
+        joystick.setVisible(false);
+        jumpBackBtn.setVisible(false);
+        jumpForwardBtn.setVisible(false);
+    }
+
+    private void showButtons() {
+        joystick.setVisible(true);
+        jumpBackBtn.setVisible(true);
+        jumpForwardBtn.setVisible(true);
+    }
+
+    private void addBody(IBody item) {
+        Body body = item.createBody(world);
+        UserData data = new UserData();
+        data.actor = (Actor)item;
+        body.setUserData(data);
+    }
+
+    private void createLands(MapObjects objects) {
+        Polygon polygon;
+        Rectangle rectangle;
+        Array<Polygon> childs;
+        for (MapObject object : objects) {
+            if (object instanceof PolygonMapObject) {
+                polygon = ((PolygonMapObject)object).getPolygon();
+                scaleToWorld(polygon);
+                childs = getTriangles(polygon);
+                addPolygonLand(childs);
+            }else if (object instanceof RectangleMapObject) {
+                rectangle = ((RectangleMapObject)object).getRectangle();
+                addRectangleLand(rectangle);
+            }
+        }
+    }
+
+    private void addRectangleLand(Rectangle rectangle) {
+        rectangle.x /= WORLD_SCALE;
+        rectangle.y /= WORLD_SCALE;
+        rectangle.width /= WORLD_SCALE;
+        rectangle.height /= WORLD_SCALE;
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.StaticBody;
+        def.linearDamping = 0;
+        FixtureDef fdef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(rectangle.width / 2, rectangle.height / 2);
+        fdef.shape = shape;
+        fdef.restitution = LAND_RESTITUTION;
+        fdef.density = 1;
+        Body body = world.createBody(def);
+        body.createFixture(fdef);
+        body.setTransform(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2, 0);
+        body.setUserData(new UserData(null, "land"));
+        shape.dispose();
+    }
+
+    private void addPolygonLand(Array<Polygon> childs) {
+
+    }
+
+    private Array<Polygon> getTriangles(Polygon polygon) {
+        return null;
+    }
+
+    private void scaleToWorld(Polygon polygon) {
+
+    }
 
     private void resumeLevel2() {
 
@@ -229,6 +448,29 @@ public class Level extends StageGame {
     }
 
     protected void playerTouch(Body body) {
-        UserData data = (UserData)body.getUserData();
+        UserData data = (UserData) body.getUserData();
+        if (data != null) {
+            if (data.name.equals("land") && !player.isHasDestroyed()) {
+                if (player.getRotation() < -90 || player.getRotation() > 90) {
+                    player.destroy();
+                    Rover.media.playSound("crash.ogg");
+                    levelFailed();
+                }else {
+                    player.touchGround();
+                }
+            }
+        }else {
+            if (body == finish) {
+                levelCompleted();
+            }
+        }
+    }
+
+    private void levelCompleted() {
+
+    }
+
+    private void levelFailed() {
+
     }
 }
