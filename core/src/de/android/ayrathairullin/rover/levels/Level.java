@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.boontaran.MessageListener;
 import com.boontaran.games.StageGame;
 import com.boontaran.games.tiled.TileLayer;
 
@@ -39,6 +40,9 @@ import de.android.ayrathairullin.rover.controls.JumpGauge;
 import de.android.ayrathairullin.rover.player.IBody;
 import de.android.ayrathairullin.rover.player.Player;
 import de.android.ayrathairullin.rover.player.UserData;
+import de.android.ayrathairullin.rover.screens.LevelCompletedScreen;
+import de.android.ayrathairullin.rover.screens.LevelFailedScreen;
+import de.android.ayrathairullin.rover.screens.PausedScreen;
 
 public class Level extends StageGame {
     public static final float WORLD_SCALE = 30;
@@ -72,6 +76,9 @@ public class Level extends StageGame {
     private boolean hasBeenBuilt = false;
     private TiledMap map;
     private JumpGauge jumpGauge;
+    private LevelCompletedScreen levelCompletedScreen;
+    private LevelFailedScreen levelFailedScreen;
+    private PausedScreen pausedScreen;
 
     public Level(String directory) {
         this.directory = directory;
@@ -168,9 +175,51 @@ public class Level extends StageGame {
                 player.jumpForward(jumpValue);
             }
         });
+        levelFailedScreen = new LevelFailedScreen(getWidth(), getHeight());
+        levelFailedScreen.addListener(new MessageListener(){
+            @Override
+            protected void receivedMessage(int message, Actor actor) {
+                if (message == LevelFailedScreen.ON_RETRY) {
+                    call(ON_RESTART);
+                }else if (message == LevelFailedScreen.ON_QUIT) {
+                    quitLevel();
+                }
+            }
+        });
+        levelCompletedScreen = new LevelCompletedScreen(getWidth(), getHeight());
+        levelCompletedScreen.addListener(new MessageListener() {
+            @Override
+            protected void receivedMessage(int message, Actor actor) {
+                if (message == LevelCompletedScreen.ON_DONE) {
+                    call(ON_COMPLETED);
+                }
+            }
+        });
+        pausedScreen = new PausedScreen(getWidth(), getHeight());
+        pausedScreen.addListener(new MessageListener() {
+            @Override
+            protected void receivedMessage(int message, Actor actor) {
+                if (message == PausedScreen.ON_RESUME) {
+                    Rover.media.playSound("click.ogg");
+                    resumeLevel();
+                }else if (message == PausedScreen.ON_QUIT) {
+                    Rover.media.playSound("click.ogg");
+                    quitLevel();
+                }
+            }
+        });
         setBackground("level_bg");
         world.getBodies(bodies);
         updateCamera();
+    }
+
+    private void resumeLevel() {
+        state = PLAY;
+        pausedScreen.hide();
+        delayCall("resumelevel2", .6f);
+        showButtons();
+        call(ON_RESUME);
+        playMusic();
     }
 
     protected void quitLevel() {
@@ -417,7 +466,7 @@ public class Level extends StageGame {
         shape.dispose();
     }
 
-    private void addPolygonLand(Array<Polygon> childs) {
+    private void addPolygonLand(Array<Polygon> triangles) {
 
     }
 
