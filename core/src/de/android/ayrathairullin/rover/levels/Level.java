@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -28,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ShortArray;
 import com.boontaran.MessageListener;
 import com.boontaran.games.StageGame;
 import com.boontaran.games.tiled.TileLayer;
@@ -467,11 +469,45 @@ public class Level extends StageGame {
     }
 
     private void addPolygonLand(Array<Polygon> triangles) {
-
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.StaticBody;
+        def.linearDamping = 0;
+        for (Polygon poly : triangles) {
+            FixtureDef fDef = new FixtureDef();
+            PolygonShape shape = new PolygonShape();
+            shape.set(poly.getTransformedVertices());
+            fDef.shape = shape;
+            fDef.restitution = LAND_RESTITUTION;
+            fDef.friction = 1;
+            fDef.density = 1;
+            Body body = world.createBody(def);
+            body.createFixture(fDef);
+            body.setUserData(new UserData(null, "land"));
+            shape.dispose();
+        }
     }
 
-    private Array<Polygon> getTriangles(Polygon polygon) {
-        return null;
+    public static Array<Polygon> getTriangles(Polygon polygon) {
+        Array<Polygon> trianglesPoly = new Array<Polygon>();
+        EarClippingTriangulator ear = new EarClippingTriangulator();
+        float vertices[] = polygon.getTransformedVertices();
+        ShortArray triangleIds = ear.computeTriangles(vertices);
+        Vector2[] list = fromArray(vertices);
+        Polygon triangle;
+        int num = triangleIds.size / 3;
+        Vector2[] triPoints;
+        int i, j;
+        for (i = 0; i < num; i++) {
+            triPoints = new Vector2[3];
+            for (j = 0; j < 3; j++) {
+                triPoints[j] = list[triangleIds.get(i * 3 + j)];
+            }
+            triangle = new Polygon(toArray(triPoints));
+            if (Math.abs(triangle.area()) > .001f) {
+                trianglesPoly.add(triangle);
+            }
+        }
+        return trianglesPoly;
     }
 
     private void scaleToWorld(Polygon polygon) {
