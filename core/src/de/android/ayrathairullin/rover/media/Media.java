@@ -14,13 +14,13 @@ public class Media {
 
     public void playSound(String name) {
         Sound sound = assetManager.get("sounds/" + name, Sound.class);
-            sound.play();
+        sound.play();
     }
 
     public void playMusic(String name, boolean loop) {
         Music music = assetManager.get("musics/" + name, Music.class);
-            music.setLooping(loop);
-            music.play();
+        music.setLooping(loop);
+        music.play();
     }
 
     public void stopMusic(String name) {
@@ -39,4 +39,5 @@ public class Media {
     public boolean update() {
         return assetManager.update();
     }
+
 }

@@ -15,28 +15,31 @@ public class Joystick extends Group{
     private static final int LEFT = 2;
     private int direction;
 
+
     public Joystick(float minHeight) {
         idle = new Image(Rover.atlas.findRegion("joystick"));
         addActor(idle);
+
         float scale = 1;
+
         if (idle.getHeight() < minHeight) {
-            scale = minHeight / idle.getHeight();
+            scale = minHeight/idle.getHeight();
         }
-        idle.setHeight(idle.getHeight() * scale);
-        idle.setWidth(idle.getWidth() * scale);
+        idle.setHeight(idle.getHeight()*scale);
+        idle.setWidth(idle.getWidth()*scale);
+
         setSize(idle.getWidth(), idle.getHeight());
 
         right = new Image(Rover.atlas.findRegion("joystick_right"));
         right.setSize(getWidth(), getHeight());
         addActor(right);
-
         left = new Image(Rover.atlas.findRegion("joystick_left"));
         left.setSize(getWidth(), getHeight());
         addActor(left);
 
         setDir(IDLE);
 
-        addListener(new ClickListener() {
+        addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 handleTouch(x, y);
@@ -55,6 +58,7 @@ public class Joystick extends Group{
                 super.touchUp(event, x, y, pointer, button);
             }
         });
+
     }
 
     public boolean isRight() {
@@ -66,14 +70,14 @@ public class Joystick extends Group{
     }
 
     private void handleTouch(float x, float y) {
-        if (x > getWidth() / 2) {
+        if (x > getWidth()/2) {
             setDir(RIGHT);
-        }else {
+        } else {
             setDir(LEFT);
         }
     }
 
-    private void setDir(int dir) {
+    private void setDir(int dir){
         idle.setVisible(false);
         right.setVisible(false);
         left.setVisible(false);
@@ -81,6 +85,7 @@ public class Joystick extends Group{
         if (dir == IDLE) idle.setVisible(true);
         if (dir == RIGHT) right.setVisible(true);
         if (dir == LEFT) left.setVisible(true);
+
         direction = dir;
     }
 }

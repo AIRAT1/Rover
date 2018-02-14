@@ -7,8 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class CButton extends Group{
+
     private Image up, down;
     private boolean isPressed;
+
 
     public CButton(Image up, Image down, float minHeight) {
         this.up = up;
@@ -19,19 +21,22 @@ public class CButton extends Group{
             down.setSize(minHeight, minHeight);
         }
 
-        addActor(up);
         addActor(down);
+        addActor(up);
+
         setSize(down.getWidth(), down.getHeight());
+
         this.up.setVisible(true);
         this.down.setVisible(false);
 
-        addListener(new ClickListener(){
+        addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 isPressed = true;
                 CButton.this.up.setVisible(false);
                 CButton.this.down.setVisible(true);
                 return true;
+
             }
 
             @Override
@@ -46,4 +51,7 @@ public class CButton extends Group{
     public boolean isPressed() {
         return isPressed;
     }
+
+
+
 }

@@ -14,6 +14,7 @@ import com.boontaran.MessageEvent;
 import de.android.ayrathairullin.rover.Rover;
 
 public class LevelFailedScreen extends Group{
+
     public static final int ON_RETRY = 1;
     public static final int ON_QUIT = 2;
 
@@ -24,29 +25,38 @@ public class LevelFailedScreen extends Group{
     public LevelFailedScreen(float w, float h) {
         this.w = w;
         this.h = h;
+
         title = new Image(Rover.atlas.findRegion("game_over"));
-        title.setX((w - title.getWidth()) / 2);
+        title.setX((w-title.getWidth())/2);
         title.setY(h);
         addActor(title);
-        retry = new ImageButton(new TextureRegionDrawable(Rover.atlas.findRegion("retry_btn")),
-                new TextureRegionDrawable(Rover.atlas.findRegion("retry_btn_down")));
+
+        retry = new ImageButton(
+                new TextureRegionDrawable(Rover.atlas.findRegion("retry_btn")),
+                new TextureRegionDrawable(Rover.atlas.findRegion("retry_btn_down"))    );
+
         addActor(retry);
-        retry.setX(w / 2 - retry.getWidth() - 30);
-        retry.setY((h - retry.getHeight()) / 2 - 60);
-        retry.setColor(1, 1, 1, 0);
-        retry.addListener(new ClickListener(){
+        retry.setY((h-retry.getHeight())/2-60);
+        retry.setX(w/2-retry.getWidth()-30);
+        retry.setColor(1,1,1,0);
+
+        retry.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 fire(new MessageEvent(ON_RETRY));
                 Rover.media.playSound("click.ogg");
             }
         });
-        quit = new ImageButton(new TextureRegionDrawable(Rover.atlas.findRegion("quit_btn")),
-                new TextureRegionDrawable(Rover.atlas.findRegion("quit_btn_down")));
+
+        quit = new ImageButton(
+                new TextureRegionDrawable(Rover.atlas.findRegion("quit_btn")),
+                new TextureRegionDrawable(Rover.atlas.findRegion("quit_btn_down"))
+        );
+
         addActor(quit);
-        quit.setX(w / 2 + 30);
-        quit.setY((h - quit.getHeight()) / 2 - 60);
-        quit.setColor(1, 1, 1, 0);
+        quit.setY((h-quit.getHeight())/2-60);
+        quit.setX(w/2 + 30);
+        quit.setColor(1,1,1,0);
         quit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -55,10 +65,9 @@ public class LevelFailedScreen extends Group{
             }
         });
     }
-
     public void start() {
-        title.addAction(Actions.moveTo(title.getX(), h - title.getHeight() - 50, .5f, Interpolation.swingOut));
-        retry.addAction(Actions.alpha(1, .3f));
-        quit.addAction(Actions.alpha(1, .3f));
+        title.addAction(Actions.moveTo(title.getX(), h-title.getHeight()-50, 0.5f, Interpolation.swingOut));
+        retry.addAction(Actions.alpha(1, 0.3f));
+        quit.addAction(Actions.alpha(1, 0.3f));
     }
 }

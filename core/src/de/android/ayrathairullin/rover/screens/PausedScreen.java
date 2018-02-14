@@ -14,25 +14,31 @@ import com.boontaran.MessageEvent;
 import de.android.ayrathairullin.rover.Rover;
 
 public class PausedScreen extends Group{
+
     public static final int ON_RESUME = 1;
     public static final int ON_QUIT = 2;
 
     private Image title;
     private ImageButton resume, quit;
+
     private float w, h;
 
     public PausedScreen(float w, float h) {
         this.w = w;
         this.h = h;
+
         title = new Image(Rover.atlas.findRegion("paused"));
-        title.setX((w = title.getWidth()) / 2);
+        title.setX((w - title.getWidth()) / 2);
         title.setY(h);
         addActor(title);
+
         resume = new ImageButton(new TextureRegionDrawable(Rover.atlas.findRegion("play_btn")),
-                new TextureRegionDrawable(Rover.atlas.findRegion("play_btn_down")));
+                new TextureRegionDrawable(Rover.atlas.findRegion("play_btn_down")
+                ));
+
         addActor(resume);
-        resume.setX(w / 2 - resume.getWidth() - 30);
         resume.setY((h - resume.getHeight()) / 2 - 60);
+        resume.setX(w / 2 - resume.getWidth() - 30);
         resume.setColor(1, 1, 1, 0);
         resume.addListener(new ClickListener() {
             @Override
@@ -40,15 +46,20 @@ public class PausedScreen extends Group{
                 fire(new MessageEvent(ON_RESUME));
             }
         });
-        quit = new ImageButton(new TextureRegionDrawable(Rover.atlas.findRegion("quit_btn")),
-                new TextureRegionDrawable(Rover.atlas.findRegion("quit_btn_down")));
+
+        quit = new ImageButton(
+                new TextureRegionDrawable(Rover.atlas.findRegion("quit_btn")),
+                new TextureRegionDrawable(Rover.atlas.findRegion("quit_btn_down"))
+        );
+
         addActor(quit);
-        quit.setX(w / 2 + 30);
         quit.setY((h - quit.getHeight()) / 2 - 60);
+        quit.setX(w / 2 + 30);
         quit.setColor(1, 1, 1, 0);
         quit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
                 fire(new MessageEvent(ON_QUIT));
             }
         });
@@ -56,16 +67,17 @@ public class PausedScreen extends Group{
 
     public void start() {
         title.setY(h);
-        resume.setColor(1, 1, 1, 0);
-        quit.setColor(1, 1, 1, 0);
-        title.addAction(Actions.moveTo(title.getX(), h - title.getHeight() - 50, .5f, Interpolation.swingOut));
-        resume.addAction(Actions.alpha(1, .3f));
-        quit.addAction(Actions.alpha(1, .3f));
+        resume.setColor(1,1,1,0);
+        quit.setColor(1,1,1,0);
+
+        title.addAction(Actions.moveTo(title.getX(), h-title.getHeight()-50, 0.5f, Interpolation.swingOut));
+        resume.addAction(Actions.alpha(1, 0.3f));
+        quit.addAction(Actions.alpha(1, 0.3f));
     }
 
     public void hide() {
-        title.addAction(Actions.moveTo(title.getX(), h, .5f, Interpolation.swingIn));
-        resume.addAction(Actions.alpha(0, .3f));
-        quit.addAction(Actions.alpha(0, .3f));
+        title.addAction(Actions.moveTo(title.getX(), h, 0.5f, Interpolation.swingIn));
+        resume.addAction(Actions.alpha(0, 0.3f));
+        quit.addAction(Actions.alpha(0, 0.3f));
     }
 }

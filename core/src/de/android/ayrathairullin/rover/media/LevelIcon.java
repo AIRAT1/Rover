@@ -22,29 +22,39 @@ public class LevelIcon extends Group{
 
     public LevelIcon(int id) {
         this.id = id;
+
         hiliteImg = new Image(Rover.atlas.findRegion("level_icon_hilite"));
         addActor(hiliteImg);
         hiliteImg.setVisible(false);
+
         bg = new Image(Rover.atlas.findRegion("level_icon_bg"));
         addActor(bg);
         setSize(bg.getWidth(), bg.getHeight());
+
         hiliteImg.setX((getWidth()-hiliteImg.getWidth())/2);
         hiliteImg.setY((getHeight()-hiliteImg.getHeight())/2);
+
         bgDown = new Image(Rover.atlas.findRegion("level_icon_bg_down"));
         addActor(bgDown);
+
         bgDown.setX(bg.getX() + (bg.getWidth()-bgDown.getWidth())/2);
         bgDown.setY(bg.getY() + (bg.getHeight()-bgDown.getHeight())/2);
         bgDown.setVisible(false);
+
         lockImg = new Image(Rover.atlas.findRegion("level_icon_lock"));
         lockImg.setX((getWidth()-lockImg.getWidth())/2);
         lockImg.setY((getHeight()-lockImg.getHeight())/2);
+
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = Rover.font40;
         style.fontColor = new Color(0x000000ff);
+
         label = new Label(id + "", style);
         label.setX((getWidth() - label.getWidth())/2);
         label.setY((getHeight() - label.getHeight())/2);
+
         setLock(true);
+
         addCaptureListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
@@ -52,18 +62,21 @@ public class LevelIcon extends Group{
                 return true;
             }
         });
+
         addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 bgDown.setVisible(true);
                 return super.touchDown(event, x, y, pointer, button);
             }
+
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 bgDown.setVisible(false);
                 super.touchUp(event, x, y, pointer, button);
             }
         });
+
     }
 
     public int getId() {
@@ -91,6 +104,7 @@ public class LevelIcon extends Group{
     public void act(float delta) {
         if (isHilited) {
             float alpha = hiliteImg.getColor().a;
+
             if (alphaUp) {
                 alpha += delta * 4;
                 if (alpha >= 1) {
@@ -106,6 +120,7 @@ public class LevelIcon extends Group{
             }
             hiliteImg.setColor(1,1,1,alpha);
         }
+
         super.act(delta);
     }
 }

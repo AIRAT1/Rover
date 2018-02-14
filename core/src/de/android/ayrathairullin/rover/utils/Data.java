@@ -5,7 +5,7 @@ import com.boontaran.DataManager;
 
 public class Data {
     private DataManager manager;
-    private static final String PREFERENCE_NAME = "Rover_data";
+    private static final String PREFERENCE_NAME = "lunar_rover_data";
     private static final String PROGRESS_KEY = "progress";
 
     public Data() {
@@ -13,10 +13,10 @@ public class Data {
     }
 
     public int getProgress() {
-        return manager.getInt(PROGRESS_KEY, 1);
+        return  manager.getInt(PROGRESS_KEY, 1);
     }
 
     public void setProgress(int progress) {
-        manager.saveInt(PREFERENCE_NAME, progress);
+        manager.saveInt(PROGRESS_KEY, progress);
     }
 }

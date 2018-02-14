@@ -14,7 +14,9 @@ import com.boontaran.MessageEvent;
 import de.android.ayrathairullin.rover.Rover;
 
 public class LevelCompletedScreen extends Group{
+
     public static final int ON_DONE = 1;
+
     private Image title;
     private ImageButton done;
     private float w, h;
@@ -22,16 +24,20 @@ public class LevelCompletedScreen extends Group{
     public LevelCompletedScreen(float w, float h) {
         this.w = w;
         this.h = h;
+
         title = new Image(Rover.atlas.findRegion("level_completed"));
-        title.setX((w - title.getWidth()) / 2);
+        title.setX((w-title.getWidth())/2);
         title.setY(h);
         addActor(title);
-        done = new ImageButton(new TextureRegionDrawable(Rover.atlas.findRegion("done_btn")),
-                new TextureRegionDrawable(Rover.atlas.findRegion("done_btn_down")));
+
+        done = new ImageButton(
+                new TextureRegionDrawable(Rover.atlas.findRegion("done_btn")),
+                new TextureRegionDrawable(Rover.atlas.findRegion("done_btn_down")) );
         addActor(done);
-        done.setX(w / 2 - done.getWidth() / 2);
-        done.setY((h - done.getHeight()) / 2 - 60);
-        done.setColor(1, 1, 1, 0);
+        done.setY((h-done.getHeight())/2 - 60);
+        done.setX(w/2 - done.getWidth()/2);
+        done.setColor(1,1,1,0);
+
         done.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -43,7 +49,7 @@ public class LevelCompletedScreen extends Group{
 
     public void start() {
         title.setY(h);
-        title.addAction(Actions.moveTo(title.getX(), h - title.getHeight() - 50, .5f, Interpolation.swingOut));
-        done.addAction(Actions.alpha(1, .3f));
+        title.addAction(Actions.moveTo(title.getX(), h-title.getHeight()-50, 0.5f, Interpolation.swingOut));
+        done.addAction(Actions.alpha(1, 0.3f));
     }
 }
