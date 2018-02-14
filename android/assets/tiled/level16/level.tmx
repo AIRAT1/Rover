@@ -25,7 +25,7 @@
   <image source="image8.png" width="800" height="800"/>
  </imagelayer>
  <objectgroup name="items">
-  <object id="1" name="player" x="17.3333" y="488" width="112" height="100"/>
+  <object id="1" name="player" x="117" y="488" width="112" height="100"/>
   <object id="2" name="finish" x="6272" y="350.667" width="101.333" height="261.333"/>
  </objectgroup>
  <objectgroup name="land">
