@@ -76,7 +76,7 @@ public class AndroidLauncher extends AndroidApplication {
                 String title = getString(R.string.share_title);
                 String body = getString(R.string.share_body) + getString(R.string.share_url);
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, title);
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, body);
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, body);
                 startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_via)));
 			}
 		}
